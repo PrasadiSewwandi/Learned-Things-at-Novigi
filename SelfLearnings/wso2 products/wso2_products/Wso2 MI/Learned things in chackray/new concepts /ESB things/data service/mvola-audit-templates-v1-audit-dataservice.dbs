@@ -1,0 +1,72 @@
+<data name="mvola-audit-templates-v1-audit-dataservice" serviceNamespace="" serviceGroup="" transports="">
+  <description />
+  <config id="Datasource">
+    <property name="org.wso2.ws.dataservice.user">$SYSTEM:MYSQL_USERNAME</property>
+    <property name="org.wso2.ws.dataservice.password">$SYSTEM:MYSQL_PASSWORD</property>
+    <property name="org.wso2.ws.dataservice.protocol">$SYSTEM:MYSQL_MVOLA_INTEGRATION</property>
+    <property name="org.wso2.ws.dataservice.driver">com.mysql.cj.jdbc.Driver</property>
+    <property name="org.wso2.ws.dataservice.minpoolsize" />
+    <property name="org.wso2.ws.dataservice.maxpoolsize" />
+    <property name="org.wso2.ws.dataservice.validation_query" />
+  </config>
+   <resource method="POST" path="transactionRecord" returnRequestStatus="true">
+    <description />
+      <call-query href="updatetransactionrecord">
+         <with-param name="internal_operation_id" query-param="internal_operation_id" />
+         <with-param name="debitor_msisdn" query-param="debitor_msisdn" />
+         <with-param name="creditor_msisdn" query-param="creditor_msisdn" />
+         <with-param name="transaction_date" query-param="transaction_date" />
+         <with-param name="amount" query-param="amount" />
+         <with-param name="transaction_status" query-param="transaction_status" />
+         <with-param name="api_status_code" query-param="api_status_code" />
+         <with-param name="transaction_status_code" query-param="transaction_status_code" />
+         <with-param name="status_reason" query-param="status_reason" />
+         <with-param name="transaction_id" query-param="transaction_id" />
+         <with-param name="external_operation_id" query-param="external_operation_id" />
+         <with-param name="partner_label" query-param="partner_label" />
+      </call-query>
+   </resource>
+   <resource method="POST" path="nonTransactionAuditRecord" returnRequestStatus="true">
+    <description />
+      <call-query href="insertnontransactionrecord">
+         <with-param name="internal_operation_id" query-param="internal_operation_id" />
+         <with-param name="debitor_msisdn" query-param="debitor_msisdn" />
+         <with-param name="creditor_msisdn" query-param="creditor_msisdn" />
+         <with-param name="event_date" query-param="event_date" />
+         <with-param name="api_status_code" query-param="api_status_code" />
+         <with-param name="transaction_status_code" query-param="transaction_status_code" />
+         <with-param name="status_reason" query-param="status_reason" />
+         <with-param name="external_operation_id" query-param="external_operation_id" />
+         <with-param name="partner_label" query-param="partner_label" />
+      </call-query>
+   </resource>
+   <query id="updatetransactionrecord" useConfig="Datasource">
+      <sql>INSERT INTO MVOLA_TRANSACTION_AUDIT (internal_operation_id, debitor_msisdn, creditor_msisdn, transaction_date, amount, transaction_status, api_status_code, transaction_status_code, status_reason, transaction_id, external_operation_id, partner_label) 
+      VALUES(:internal_operation_id, :debitor_msisdn, :creditor_msisdn, :transaction_date, :amount, :transaction_status, :api_status_code, :transaction_status_code, :status_reason, :transaction_id, :external_operation_id, :partner_label)</sql>
+      <param name="internal_operation_id" paramType="SCALAR" sqlType="STRING" />
+      <param name="debitor_msisdn" paramType="SCALAR" sqlType="STRING" />
+      <param name="creditor_msisdn" paramType="SCALAR" sqlType="STRING" />
+      <param name="transaction_date" paramType="SCALAR" sqlType="STRING" />
+      <param name="amount" paramType="SCALAR" sqlType="STRING" />
+      <param name="transaction_status" paramType="SCALAR" sqlType="STRING" />
+      <param name="api_status_code" paramType="SCALAR" sqlType="STRING" />
+      <param name="transaction_status_code" paramType="SCALAR" sqlType="STRING" />
+      <param name="status_reason" paramType="SCALAR" sqlType="STRING" />
+      <param name="transaction_id" paramType="SCALAR" sqlType="STRING" />
+      <param name="external_operation_id" paramType="SCALAR" sqlType="STRING" />
+      <param name="partner_label" paramType="SCALAR" sqlType="STRING" />
+   </query>
+   <query id="insertnontransactionrecord" useConfig="Datasource">
+      <sql>INSERT INTO MVOLA_NON_TRANSACTION_AUDIT (internal_operation_id, debitor_msisdn, creditor_msisdn, event_date, api_status_code, transaction_status_code, status_reason, external_operation_id, partner_label) 
+      VALUES(:internal_operation_id, :debitor_msisdn, :creditor_msisdn, :event_date, :api_status_code, :transaction_status_code, :status_reason, :external_operation_id, :partner_label)</sql>
+      <param name="internal_operation_id" paramType="SCALAR" sqlType="STRING" />
+      <param name="debitor_msisdn" paramType="SCALAR" sqlType="STRING" />
+      <param name="creditor_msisdn" paramType="SCALAR" sqlType="STRING" />
+      <param name="event_date" paramType="SCALAR" sqlType="STRING" />
+      <param name="api_status_code" paramType="SCALAR" sqlType="STRING" />
+      <param name="transaction_status_code" paramType="SCALAR" sqlType="STRING" />
+      <param name="status_reason" paramType="SCALAR" sqlType="STRING" />
+      <param name="external_operation_id" paramType="SCALAR" sqlType="STRING" />
+      <param name="partner_label" paramType="SCALAR" sqlType="STRING" />
+   </query>
+</data>

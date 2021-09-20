@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="mvola-umarket-connector-v1-soap-umarket-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="$SYSTEM:MVOLA_UMARKET_CONNECTOR_SOAP_UMARKET_ENDPOINT">
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </address>
+</endpoint>

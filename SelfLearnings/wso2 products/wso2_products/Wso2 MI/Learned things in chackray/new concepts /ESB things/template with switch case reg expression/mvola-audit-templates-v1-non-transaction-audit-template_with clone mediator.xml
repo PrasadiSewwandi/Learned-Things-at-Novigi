@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="mvola-audit-templates-v1-non-transaction-audit-template"
+    xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="debitorMsisdn"/>
+    <parameter name="creditorMsisdn"/>
+    <parameter name="transactionDate"/>
+    <sequence>
+        <call-template target="mvola-logger-v2-template">
+            <with-param name="integrationName" value="{$ctx:integrationName}"/>
+            <with-param name="integrationVersion" value="{$ctx:integrationVersion}"/>
+            <with-param name="sequenceName" value="mvola-audit-templates-v1-non-transaction-audit-template"/>
+            <with-param name="includeMessageBody" value="false"/>
+            <with-param name="logMessage" value="{fn:concat('Invoking non transaction audit template: ', $func:debitorMsisdn)}"/>
+            <with-param name="logLevel" value="INFO"/>
+        </call-template>
+        <clone>
+            <target>
+                <sequence>
+                    <property name="REST_URL_POSTFIX" value="" scope="axis2" type="STRING"/>
+                    <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+                    <property name="OUT_ONLY" value="true"/>
+                    <property name="messageType" value="application/json" scope="axis2"/>
+                    <header name="Accept" scope="transport" value="application/json"/>
+                    <payloadFactory media-type="json">
+                        <format>{
+                            "_postnonTransactionAuditRecord":{
+                            "internal_operation_id":"$1",
+                                "debitor_msisdn":"$2",
+                                "creditor_msisdn":"$3",
+                                "event_date":"$4",
+                                "api_status_code":"$5",
+                                "transaction_status_code":"$6",
+                                "status_reason":"$7",
+                                "external_operation_id":"$8",
+                                "partner_label":"$9"
+                            }
+                        }</format>
+                        <args>
+                            <arg evaluator="xml" expression="$ctx:MetaData//CorrelationId/text()"/>
+                            <arg evaluator="xml" expression="$func:debitorMsisdn"/>
+                            <arg evaluator="xml" expression="$func:creditorMsisdn"/>
+                            <arg evaluator="xml" expression="$func:transactionDate"/>
+                            <arg evaluator="xml" expression="$ctx:STATUS_CODE"/>
+                            <arg evaluator="xml" expression="$ctx:MM_RESULT_CODE"/>
+                            <arg evaluator="xml" expression="$ctx:statusReason"/>
+                            <arg evaluator="xml" value="$ctx:MetaData//ClientCorrelationId/text()"/>
+                            <arg evaluator="xml" value="$ctx:MetaData//Channel/text()"/>
+                        </args>
+                    </payloadFactory>
+                    <store messageStore="mvola-audit-templates-v1-non-transaction-audit-message-store"/>
+                </sequence>
+            </target>
+        </clone>
+    </sequence>
+</template>

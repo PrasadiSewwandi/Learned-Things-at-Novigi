@@ -1,0 +1,17 @@
+
+1) sudo pip3 install pyodbc -t .
+
+2) python3 setup.py sdist
+
+3) twine upload dist/*
+
+Novigi
+
+NovigiLK@123
+
+4) sudo pip3 install airflow_customs_by_novigi --upgrade
+
+
+
+
+

@@ -1,0 +1,29 @@
+==================================================================================================================
+
+Wso2 EI
+_________________
+
+sudo wso2ei-6.6.0-integrator
+
+sudo wso2ei-6.6.0-integrator -DportOffset=2   (change the default port by 2)
+__________________________________________________________________________________________________________________
+
+sudo netstat -lnp
+
+sudo kill -9 1644     (Kill a port)
+
+chown prasadi lib    (ch own ... ownergen log wela change karanawa lib folder eka)
+
+chmod 777 lib        (permision wenas karanawa lib folder eke/or file name)
+
+cd ..                (go back one folder)
+
+chmod 777 ./          (inna folder eke permision wenas karanawa)
+
+ps -aux | grep "wso2"
+
+==========================================================================================================================
+
+Wso2 APIM
+________________
+

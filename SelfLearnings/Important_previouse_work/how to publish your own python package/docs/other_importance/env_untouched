@@ -1,0 +1,7 @@
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/jdk/jdk1.8.0_271/bin:/usr/local/lib/python3.6:/snap/bin:/home/prasadi/Downloads/microGateway/wso2am-micro-gw-toolkit-linux-3.2.0/bin
+"
+JAVA_HOME=/opt/jdk/jdk1.8.0_271
+JRE_HOME=/opt/jdk/jdk1.8.0_271/jre
+AIRFLOW_HOME=/opt/data/airflow
+PYTHONPATH=/usr/local/lib/pyt
+hon3.6

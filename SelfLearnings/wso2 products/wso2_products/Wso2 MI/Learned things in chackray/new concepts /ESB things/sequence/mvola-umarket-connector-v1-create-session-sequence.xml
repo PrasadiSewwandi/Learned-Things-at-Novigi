@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="mvola-umarket-connector-v1-create-session-sequence" onError="mvola-umarket-connector-v1-common-error-sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <payloadFactory media-type="xml">
+        <format>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema­instance">
+                <soapenv:Body>
+                    <createsession xmlns="urn:UMARKETSCWS"/>
+                </soapenv:Body>
+            </soapenv:Envelope>
+        </format>
+        <args/>
+    </payloadFactory>
+    <property name="messageType" scope="axis2" type="STRING" value="text/xml"/>
+    <call>
+        <endpoint>
+            <address format="soap11" uri="http://utapp1q:8090/services/umarketsc">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>1</progressionFactor>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+    <filter regex="0" source="//*[local-name()='createsessionReturn']/*[local-name()='result']/text()">
+        <then>
+            <log level="custom">
+                <property expression="//*[local-name()='createsessionReturn']/*[local-name()='sessionid']/text()" name="**sessionid"/>
+            </log>
+        </then>
+        <else/>
+    </filter>
+</sequence>

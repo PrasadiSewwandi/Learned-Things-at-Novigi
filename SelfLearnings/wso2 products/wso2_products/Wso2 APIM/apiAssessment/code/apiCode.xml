@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><proxy xmlns="http://ws.apache.org/ns/synapse" name="BookStore" startOnLoad="true" statistics="disable" trace="disable" transports="http,https">
+    <target>
+        <inSequence>
+            <call>
+                <endpoint>
+                    <address uri="https://api.itbook.store/1.0/new"/>
+                </endpoint>
+            </call>
+            <log level="custom">
+                <property name="message:" value=" Returned from callout"/>
+                <property expression="get-property('axis2','HTTP_SC')" name="status:"/>
+                <property expression="$axis2:HTTP_SC" name="status:"/>
+            </log>
+            <iterate expression="//books" id="iterator_001" sequential="true">
+                <target>
+                    <sequence>
+                        <log level="custom">
+                            <property name="message:" value="inside iterater"/>
+                        </log>
+                        <property expression="//books/title" name="title"/>
+                        <property expression="//books/subtitle" name="subtitle"/>
+                        <property expression="//books/isbn13" name="uri.var.isbn13"/>
+                        <property expression="//books/price" name="price"/>
+                        <property expression="//books/image" name="image"/>
+                        <property expression="//books/url" name="url"/>
+                        <log level="custom">
+                            <property expression="$ctx:uri.var.isbn13" name="isbn"/>
+                        </log>
+                        <call>
+                            <endpoint>
+                                <http method="GET" uri-template="https://api.itbook.store/1.0/books/{uri.var.isbn13}"/>
+                            </endpoint>
+                        </call>
+                        <property expression="//authors" name="authors"/>
+                        <dbreport>
+                            <connection>
+                                <pool>
+                                    <driver>com.mysql.jdbc.Driver</driver>
+                                    <url>jdbc:mysql://localhost:3306/bookStore</url>
+                                    <user>root</user>
+                                    <password>root</password>
+                                </pool>
+                            </connection>
+                            <statement>
+                                <sql>insert into Books (title, subtitle, author,isbn13, price, image,url ) values (?,?,?,?,?,?,?)</sql>
+                                <parameter expression="$ctx:title" type="VARCHAR"/>
+                                <parameter expression="$ctx:subtitle" type="VARCHAR"/>
+                                <parameter expression="$ctx:authors" type="VARCHAR"/>
+                                <parameter expression="$ctx:uri.var.isbn13" type="VARCHAR"/>
+                                <parameter expression="$ctx:price" type="VARCHAR"/>
+                                <parameter expression="$ctx:image" type="VARCHAR"/>
+                                <parameter expression="$ctx:url" type="VARCHAR"/>
+                            </statement>
+                        </dbreport>
+                    </sequence>
+                </target>
+            </iterate>
+        </inSequence>
+        <outSequence>
+            <log level="custom">
+                <property name="MESSAGE" value="+++++++++++++++++++++++++++++++++++++++++++++++++++++++ Hit Out Sequence +++++++++++++++++++++++++++++++++++++++++++"/>
+            </log>
+            <respond/>
+        </outSequence>
+    </target>
+    <description/>
+</proxy>
+                                

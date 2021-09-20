@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="mvola-common-utilities-v1-msisdn-normalization-template" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter defaultValue="" isMandatory="false" name="msisdn"/>
+    <sequence>
+        <call-template target="mvola-logger-v2-template">
+            <with-param name="integrationName" value="{$ctx:integrationName}"/>
+            <with-param name="integrationVersion" value="{$ctx:integrationVersion}"/>
+            <with-param name="sequenceName" value="mvola-common-utilities-v1-msisdn-normalization-template"/>
+            <with-param name="includeMessageBody" value="false"/>
+            <with-param name="logMessage" value="{fn:concat('Normalizing MSISDN: ', $func:msisdn)}"/>
+            <with-param name="logLevel" value="INFO"/>
+        </call-template>
+        <property expression="fn:string-length($func:msisdn)" name="msisdn_length" scope="default" type="STRING"/>
+        <property expression="fn:substring-before($ctx:msisdn_length, '.')" name="length" scope="default" type="STRING"/>
+        <switch source="$ctx:length">
+            <case regex="9">
+                <filter regex="(34)(\d)\w{6}" source="$func:msisdn" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="1"/>
+                        <property expression="$func:msisdn" name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING"/>
+                        <property expression="fn:concat('0', $func:msisdn)" name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING"/>
+                    </then>
+                    <else>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                        <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                        <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+                    </else>
+                </filter>
+            </case>
+            <case regex="10">
+                <filter regex="(034)(\d)\w{6}" source="$func:msisdn" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="1"/>
+                        <property expression="$func:msisdn" name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING"/>
+                        <property expression="fn:substring($func:msisdn,2)" name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING"/>
+                    </then>
+                    <else>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                        <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                        <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+                    </else>
+                </filter>
+            </case>
+            <case regex="12">
+                <filter regex="(26134)(\d)\w{6}" source="$func:msisdn" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="1"/>
+                        <property expression="fn:substring($func:msisdn,4)" name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING"/>
+                        <property expression="fn:concat('0',fn:substring($func:msisdn,4))" name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING"/>
+                    </then>
+                    <else>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                        <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                        <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+                    </else>
+                </filter>
+            </case>
+            <case regex="13">
+                <filter regex="(\+26134)(\d)\w{6}" source="$func:msisdn" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="1"/>
+                        <property expression="fn:substring-after($func:msisdn,'+261')" name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING"/>
+                        <property expression="fn:concat('0',fn:substring-after($func:msisdn,'+261'))" name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING"/>
+                    </then>
+                    <else>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                        <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                        <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+                    </else>
+                </filter>
+            </case>
+            <case regex="14">
+                <filter regex="(0026134)(\d)\w{6}" source="$func:msisdn" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="1"/>
+                        <property expression="fn:substring($func:msisdn,6)" name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING"/>
+                        <property expression="fn:concat('0',fn:substring($func:msisdn,6))" name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING"/>
+                    </then>
+                    <else>
+                        <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                        <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                        <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+                    </else>
+                </filter>
+            </case>
+            <default>
+                <property name="MSISDN_VALIDATION_STATUS" scope="default" type="STRING" value="0"/>
+                <property name="NORMALIZED_MSISDN_ERICSSON" scope="default" type="STRING" value=""/>
+                <property name="NORMALIZED_MSISDN_UMARKET" scope="default" type="STRING" value=""/>
+            </default>
+        </switch>
+    </sequence>
+</template>

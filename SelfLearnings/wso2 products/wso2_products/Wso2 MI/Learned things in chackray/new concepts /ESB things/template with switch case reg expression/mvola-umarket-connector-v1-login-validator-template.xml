@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template name="mvola-umarket-connector-v1-login-validator-template" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter defaultValue="" isMandatory="false" name="msisdn"/>
+    <parameter defaultValue="" isMandatory="false" name="encodedPin"/>
+    <sequence>
+        <sequence key="mvola-umarket-connector-v1-login-validator-sequence"/>
+    </sequence>
+</template>

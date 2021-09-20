@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/nomalize-msisdn/v1" name="mvola-common-utilities-v1-msisdn-normalize-test-api" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/{msisdn}">
+        <inSequence>
+            <property description="Set integrationName" name="integrationName" scope="default" type="STRING" value="Common Utilites"/>
+            <property description="Set integrationVersion" name="integrationVersion" scope="default" type="STRING" value="1.0.0"/>
+            <call-template target="mvola-metadata-creator-v1-template">
+                <with-param name="messageType" value="NOTIFICATION"/>
+                <with-param name="messageVersion" value="1.0.0"/>
+                <with-param name="CellIdA" value="02983993"/>
+                <with-param name="GeoLocationA" value="7.185440,79.822048"/>
+            </call-template>
+            <call-template target="mvola-logger-v2-template">
+                <with-param name="integrationName" value="{$ctx:integrationName}"/>
+                <with-param name="integrationVersion" value="{$ctx:integrationVersion}"/>
+                <with-param name="sequenceName" value="mvola-common-utilities-v1-msisdn-normalize-test-insequence"/>
+                <with-param name="includeMessageBody" value="false"/>
+                <with-param name="logMessage" value="Msisdn normalization test"/>
+                <with-param name="logLevel" value="INFO"/>
+            </call-template>
+            <call-template target="mvola-common-utilities-v1-msisdn-normalization-template">
+                <with-param name="msisdn" value="{get-property('uri.var.msisdn')}"/>
+            </call-template>
+            <payloadFactory media-type="json">
+                <format>{"validationStatus":"$1",
+                    "ericssonMsisdn": "$2",
+                    "umarketMsisdn":"$3"
+                    }</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:MSISDN_VALIDATION_STATUS"/>
+                    <arg evaluator="xml" expression="$ctx:NORMALIZED_MSISDN_ERICSSON"/>
+                    <arg evaluator="xml" expression="$ctx:NORMALIZED_MSISDN_UMARKET"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>

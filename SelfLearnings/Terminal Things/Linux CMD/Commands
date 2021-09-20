@@ -1,0 +1,39 @@
+to find a file
+_______________
+
+. find <directry that we should find the path> -name <file name>
+
+. find /home -name *.jpg
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+copppy a file from one place to another
+___________________________________________
+
+cp -f [source] [destination]
+
+cp -f  /home/prasadi/Desktop/Importance/Assignments/assessmnet/apiAssessment/API_Assessment.pdf API_Assessment.pdf
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+To get the row count of a particular csv file
+_____________________________________________________
+
+cat Test1.csv | wc -l
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+To search a particular word or a phase In a file
+________________________________________________________
+
+1) cat <fileName>
+
+2) /<particular word or phase>
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+To print the 3rd line of a file:
+_________________________________________
+
+Code:
+
+sed -n '3 p' < filename
